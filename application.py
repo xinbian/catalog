@@ -1,48 +1,76 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+from database_setup import Base, Department, DepartmentItem
 
 app = Flask(__name__)
 
+engine = create_engine('sqlite:///supermarketitems.db', 
+    connect_args={'check_same_thread': False})
+Base.metadata.bind = engine
+
+DBSession = sessionmaker(bind=engine)
+session = DBSession()
+
 @app.route('/')
-@app.route('/categories')
+@app.route('/catalogs')
 def showCategoreis():
+    departments = session.query(Department).all()
+    items = session.query(DepartmentItem).all()
     return render_template(
-        'categories.html')
+        'catalogs.html',
+        catalogs = departments,
+        items = items)
 
-@app.route('/categories/new')
-def newCategories():
-    return render_template(
-        'newCategories.html')
 
-@app.route('/categories/<int:cate_id>/edit')
-def editCategories(cate_id):
+@app.route('/catalogs/new')
+def newCatalogs():
     return render_template(
-        'editCategories.html')
+        'newCatalogs.html')
 
-@app.route('/categories/<int:cate_id>/delete')
-def deleteCategories(cate_id):
-    return render_template(
-        'deleteCategories.html')
 
-@app.route('/categories/<int:cate_id>')
-@app.route('/categories/<int:cate_id>/items')
-def showCategoriesItem(cate_id):
+@app.route('/catalogs/<int:cata_id>/edit')
+def editCatalogs(cata_id):
     return render_template(
-        'items.html')
+        'editCatalogs.html')
 
-@app.route('/categories/<int:cate_id>/new')
-def createCategoriesItem(cate_id):
-    return render_template(
-        'newCategoriesItem.html')
 
-@app.route('/categories/<int:cate_id>/<int:item_id>/edit')
-def editCategoriesItem(cate_id,item_id):
+@app.route('/catalogs/<int:cata_id>/delete')
+def deleteCatalogs(cata_id):
     return render_template(
-        'editCategoriesItem.html')
+        'deleteCatalogs.html')
 
-@app.route('/categories/<int:cate_id>/<int:item_id>/delete')
-def deleteCategoriesItem(cate_id,item_id):
+
+@app.route('/catalogs/<int:cata_id>')
+@app.route('/catalogs/<int:cata_id>/items')
+def showCatalogsItem(cata_id):
+    departments = session.query(Department).all()
+    department = session.query(Department).filter_by(id=cata_id).one()
+    items = session.query(DepartmentItem).filter_by(department_id=department.id)
     return render_template(
-        'deleteCategoriesItem.html')
+        'cataItem.html',
+        catalogs = departments,
+        catalog = department,
+        items = items)
+
+
+@app.route('/catalogs/<int:cata_id>/items/new')
+def createCatalogsItem(cata_id):
+    return render_template(
+        'newCatalogsItem.html')
+
+
+@app.route('/catalogs/<int:cata_id>/items/<int:item_id>/edit')
+def editCatalogsItem(cata_id, item_id):
+    return render_template(
+        'editCatalogsItem.html')
+
+
+@app.route('/catalogs/<int:cata_id>/items/<int:item_id>/delete')
+def deleteCatalogsItem(cata_id, item_id):
+    return render_template(
+        'deleteCatalogsItem.html')
+
 
 if __name__ == '__main__':
     app.debug = True
