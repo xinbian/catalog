@@ -31,37 +31,41 @@
           </ul>
       </div>
     </nav>
-   
-
-    <div class="container-fluid">
+       <div class="container-fluid">
 
         <div class="row" style="background: lightblue;">
 
           <div class="col-md-12">
-              
-            <h1>{{item.name}}</h1>
+              <h1>Edit Item</h1>
+                    
+              <form action="{{url_for('editItem', item_id = item.id, cata_id = cata_id)}}" method='POST'>
 
-            
-            <ul>
-              <li>Price: ${{item.price}}</li>
-              <li>Department: {{catalog}}</li>
-              <li>Description: {{item.description}}</li>
-            </ul>  
+               <dl>
+                    <dt>Item:</dt>
+                    <dd><input type='text' size='30' name='name' placeholder='{{item.name}}'></dd>
+                    <dt>Description:</dt>
+                    <dd><textarea name='description' rows='5' cols='40' placeholder='{{item.description}}'></textarea></dd>
+		    <dt>Price:</dt>
+                    <dd><input type='number' step="0.01" size='30' name='price' placeholder='{{item.price}}'required></dd>
+                    <dt>Department:</dt>
+                    <dd><select name='department'>
+                        {% for c in departments %}
+                        <option value={{c.id}}>{{c.name}}</option>
+                        {% endfor %}
+                    </select></dd>
+                </dl>
 
 
-            </br>
+                <input type='submit' value='Submit'>
 
-            <a href='{{url_for('editItem', item_id = item.id, cata_id = cata_id)}}'>Edit </a>
+                <a href="{{url_for('showCategoreis')}}">Cancel</a>
 
-            <a href='{{url_for('deleteCatalogsItem', item_id = item.id, cata_id = cata_id)}}'>Delete</a>
-
-            <a href="{{url_for('showCategoreis')}}">Home</a>
+            </form>
 
           </div>
         </div>
 
     </div>
-
 
     <!-- jQuery first, then Tether, then Bootstrap JS. -->
     <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>

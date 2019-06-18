@@ -31,41 +31,43 @@
           </ul>
       </div>
     </nav>
-   
 
-    <div class="container-fluid">
+<div class='container-fluid'>
 
-        <div class="row" style="background: lightblue;">
+    <div class='row'>
 
-          <div class="col-md-12">
-              
-            <h1>{{item.name}}</h1>
+        <div class='col-xs-12'>
 
-            
-            <ul>
-              <li>Price: ${{item.price}}</li>
-              <li>Department: {{catalog}}</li>
-              <li>Description: {{item.description}}</li>
-            </ul>  
+            <h1>New Dessert Item</h1>
+
+            <form action="{{url_for('newItem')}}" method='POST'>
+
+                <dl>
+                    <dt>Dessert:</dt>
+                    <dd><input type='text' size='30' name='dessert' required></dd>
+                    <dt>Description:</dt>
+                    <dd><textarea name='description' rows='5' cols='40' required></textarea></dd>
+                    <dt>Category:</dt>
+                    <dd><select name='category'>
+                        {% for c in categories %}
+                        <option value={{c.name}}>{{c.name}}</option>
+                        {% endfor %}
+                    </select></dd>
+                </dl>
 
 
-            </br>
+                <input type='submit' value='Create'>
 
-            <a href='{{url_for('editItem', item_id = item.id, cata_id = cata_id)}}'>Edit </a>
+                <a href="{{url_for('showCatalog')}}">Cancel</a>
 
-            <a href='{{url_for('deleteCatalogsItem', item_id = item.id, cata_id = cata_id)}}'>Delete</a>
+            </form>
 
-            <a href="{{url_for('showCategoreis')}}">Home</a>
-
-          </div>
         </div>
 
     </div>
 
+</div>
 
-    <!-- jQuery first, then Tether, then Bootstrap JS. -->
-    <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
-  </body>
+</body>
+
 </html>

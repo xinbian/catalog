@@ -37,26 +37,20 @@
 
         <div class="row" style="background: lightblue;">
 
-          <div class="col-md-12">
-              
-            <h1>{{item.name}}</h1>
+          <div class="col-md-6">
+              <h1>Department</h1>
+              {% for i in catalogs%}
+              <a href='{{url_for('showCatalogsItem', cata_id = i.id)}}'>{{i.name}}</a>
+              </br>
+              {% endfor %}
+          </div>
+          <div class="col-md-6" style="background: yellow;">
 
-            
-            <ul>
-              <li>Price: ${{item.price}}</li>
-              <li>Department: {{catalog}}</li>
-              <li>Description: {{item.description}}</li>
-            </ul>  
-
-
-            </br>
-
-            <a href='{{url_for('editItem', item_id = item.id, cata_id = cata_id)}}'>Edit </a>
-
-            <a href='{{url_for('deleteCatalogsItem', item_id = item.id, cata_id = cata_id)}}'>Delete</a>
-
-            <a href="{{url_for('showCategoreis')}}">Home</a>
-
+              <h1>Recent added items</h1> 
+              {% for i in items%}
+              <a href='{{url_for('showOneItem', item_id = i.id, cata_id = i.department_id)}}'>{{i.name}} </a>
+              </br>
+              {% endfor %}
           </div>
         </div>
 

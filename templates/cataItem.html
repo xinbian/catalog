@@ -3,21 +3,34 @@
   <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
-    <style>
-        .row div{padding: 20px 10px; border: 1px solid;}
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <style type="text/css">
+      body { background: grey !important; } 
     </style>
   </head>
   <body>
-    <div class="jumbotron jumbotron-fluid bg-info text-white text-center">
-       <div class="container">
-           <h1 class="display-4">Welcome to Catalog Item</h1>
-           <p class="lead">A Udacity Full Stack Project</p>
-       </div>
-   </div>
+
+
+    <nav class="navbar navbar-light" style="background-color: lightblue;">
+      <div class="container-fluid">
+          <div class="navbar-header">
+              <a class="navbar-brand" href="#">Catalog Project</a>
+          </div>
+          <ul class="nav navbar-nav">
+              <li class="active"><a href="{{url_for('showCategoreis')}}">Home</a></li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+              {% if 'username' not in session %}
+              <li><a href="{{url_for('showLogin')}}"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+              {% else %}
+              <li><a href="{{url_for('logout')}}"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+              {% endif %}
+          </ul>
+      </div>
+    </nav>
 
     <div class="container-fluid">
 
@@ -32,7 +45,7 @@
           <div class="col-md-6" style="background: yellow;">
               <h1>Recent added items</h1>
               {% for i in items%}
-              <a> {{i.name}}({{i.price}}) </a>
+              <a href='{{url_for('showOneItem', item_id = i.id, cata_id = i.department_id)}}'>{{i.name}}</a>
               </br>
               {% endfor %}
           </div>
