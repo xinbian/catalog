@@ -21,7 +21,9 @@ class Department(Base):
     __tablename__ = 'department'
 
     id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey('user.id'))
     name = Column(String(250), nullable=False)
+    user = relationship(User)
 
     @property
     def serialize(self):
@@ -41,6 +43,8 @@ class DepartmentItem(Base):
     price = Column(Numeric)
     department_id = Column(Integer, ForeignKey('department.id'))
     department = relationship(Department)
+    user_id = Column(Integer, ForeignKey('user.id'))
+    user = relationship(User)
 
     @property
     def serialize(self):

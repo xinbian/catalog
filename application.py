@@ -244,7 +244,8 @@ def newItem():
                         name=request.form['name'],
                         price=request.form['price'],
                         description=request.form['description'],
-                        department_id=request.form['department'])
+                        department_id=request.form['department'],
+                        user_id=login_session['user_id'])
                 session.add(newItem)
                 session.commit()
                 flash('New Item Successfully Added')
@@ -289,6 +290,8 @@ def editItem(cata_id, item_id):
     editedItem = session.query(DepartmentItem).filter_by(id=item_id).one()
     if 'username' not in login_session:
         return redirect('/login')
+    if login_session['user_id'] != editedItem.user_id:
+        return redirect(url_for('showCategoreis'))
     if request.method == 'POST':
         if request.form['name']:
             editedItem.name = request.form['name']
@@ -319,6 +322,9 @@ def deleteCatalogsItem(cata_id, item_id):
         deletedItem = session.query(DepartmentItem).filter_by(id=item_id).one()
         if 'username' not in login_session:
             return redirect('/login')
+        if login_session['user_id'] != deletedItem.user_id:
+            flash('Not correct user')
+            return redirect(url_for('showCategoreis'))
         if request.method == 'POST':
                 session.delete(deletedItem)
                 session.commit()
