@@ -236,23 +236,23 @@ def showCategoreis():
 
 @app.route('/catalogs/new', methods=['GET', 'POST'])
 def newItem():
-        departments = session.query(Department).all()
-        if 'username' not in login_session:
-            return redirect('/login')
-        if request.method == 'POST':
-                newItem = DepartmentItem(
-                        name=request.form['name'],
-                        price=request.form['price'],
-                        description=request.form['description'],
-                        department_id=request.form['department'],
-                        user_id=login_session['user_id'])
-                session.add(newItem)
-                session.commit()
-                flash('New Item Successfully Added')
-                return redirect(url_for('showCategoreis'))
-        else:
-                return render_template(
-                    'newCatalogsItem.html', departments=departments)
+    if 'username' not in login_session:
+        return redirect('/login')
+    departments = session.query(Department).all()
+    if request.method == 'POST':
+        newItem = DepartmentItem(
+            name=request.form['name'],
+            price=request.form['price'],
+            description=request.form['description'],
+            department_id=request.form['department'],
+            user_id=login_session['user_id'])
+        session.add(newItem)
+        session.commit()
+        flash('New Item Successfully Added')
+        return redirect(url_for('showCategoreis'))
+    else:
+        return render_template(
+            'newCatalogsItem.html', departments=departments)
 
 
 # view items in a department
@@ -286,11 +286,12 @@ def showOneItem(cata_id, item_id):
     '/catalogs/<int:cata_id>/items/<int:item_id>/edit',
     methods=['GET', 'POST'])
 def editItem(cata_id, item_id):
-    departments = session.query(Department).all()
-    editedItem = session.query(DepartmentItem).filter_by(id=item_id).one()
     if 'username' not in login_session:
         return redirect('/login')
+    departments = session.query(Department).all()
+    editedItem = session.query(DepartmentItem).filter_by(id=item_id).one()
     if login_session['user_id'] != editedItem.user_id:
+        flash('You can only edit items added by yourself')
         return redirect(url_for('showCategoreis'))
     if request.method == 'POST':
         if request.form['name']:
@@ -319,24 +320,24 @@ def editItem(cata_id, item_id):
     '/catalogs/<int:cata_id>/items/<int:item_id>/delete',
     methods=['GET', 'POST'])
 def deleteCatalogsItem(cata_id, item_id):
-        deletedItem = session.query(DepartmentItem).filter_by(id=item_id).one()
-        if 'username' not in login_session:
-            return redirect('/login')
-        if login_session['user_id'] != deletedItem.user_id:
-            flash('Not correct user')
-            return redirect(url_for('showCategoreis'))
-        if request.method == 'POST':
-                session.delete(deletedItem)
-                session.commit()
-                flash('Item Successfully Deleted')
-                return redirect(url_for('showCategoreis'))
-        else:
-                return render_template(
-                    'deleteCatalogsItem.html',
-                    item=deletedItem, cata_id=cata_id)
+    if 'username' not in login_session:
+        return redirect('/login')
+    deletedItem = session.query(DepartmentItem).filter_by(id=item_id).one()
+    if login_session['user_id'] != deletedItem.user_id:
+        flash('You can only delete items added by yourself')
+        return redirect(url_for('showCategoreis'))
+    if request.method == 'POST':
+        session.delete(deletedItem)
+        session.commit()
+        flash('Item Successfully Deleted')
+        return redirect(url_for('showCategoreis'))
+    else:
+        return render_template(
+            'deleteCatalogsItem.html',
+            item=deletedItem, cata_id=cata_id)
 
 
 if __name__ == '__main__':
-        app.secret_key = 'super_secret_key'
-        app.debug = True
-        app.run(host='0.0.0.0', port=5000)
+    app.secret_key = 'super_secret_key'
+    app.debug = True
+    app.run(host='0.0.0.0', port=5000)

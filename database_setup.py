@@ -53,7 +53,7 @@ class DepartmentItem(Base):
             'name': self.name,
             'description': self.description,
             'id': self.id,
-            'price': string(self.price),
+            'price': str(self.price),
         }
 
 
